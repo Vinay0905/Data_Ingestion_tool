@@ -8,3 +8,13 @@ dotenv
 pandas
 langchain-core
 langchain-openai
+yaml
+pydantic
+openai
+requests
+tqdm
+uvicorn
+langchain-groq
+
+
+-e .
