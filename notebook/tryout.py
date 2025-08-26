@@ -240,7 +240,7 @@ app = workflow.compile()
 
 # 8. Run the Agent
 # To run this, you'll first need to create a sample CSV file.
-# For example, create a file named 'sample_data.csv' in the 'data/input/' directory.
+# For example, create a file named 'sample_data.csv' in the 'INPUT_FILES/' directory.
 #
 # sample_data.csv:
 # Sale ID,Customer Name,Sale Amount
@@ -250,7 +250,7 @@ app = workflow.compile()
 # 4,Peter Jones,250
 
 # The input to the app is a dictionary with the initial state.
-inputs = {"file_path": "data/input/sample_data.csv"}
+inputs = {"file_path": "INPUT_FILES/sample_data.csv"}
 result = app.invoke(inputs)
 
 print("\n---FINAL OUTCOME---")
