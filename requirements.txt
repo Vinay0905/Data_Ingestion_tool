@@ -1,0 +1,10 @@
+# uv pip list
+
+
+
+langchain
+langgraph
+dotenv
+pandas
+langchain-core
+langchain-openai
