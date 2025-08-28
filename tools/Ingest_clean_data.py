@@ -35,7 +35,7 @@ class DataProcessingTools:
                 if 'fill_na' in cleaning_instructions:
                     df = df.fillna(cleaning_instructions['fill_na'])
             
-            return df
+            return df   
         except Exception as e:
             print(f"Data processing error: {e}")
             raise

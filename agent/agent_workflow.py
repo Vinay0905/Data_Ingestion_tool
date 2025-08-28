@@ -24,6 +24,11 @@ from utilits.save_document import ExcelSaver
 
 # Place AgentState and workflow setup here.
 class GraphBuilder:
+    def escalate_or_request_input(self, state: AgentState):
+        """Escalate or request user input after repeated validation failures."""
+        print("Validation failed multiple times. Escalating or requesting user input.")
+        # You can add logic here to notify a user, log, or request new cleaning instructions
+        return {"agent_outcome": "Validation failed multiple times. Please review the data or provide new cleaning instructions."}
 
     def __init__(self, model_provider: str = 'openai'):
         self.model_loader = ModelLoader(model_provider=model_provider)
@@ -47,18 +52,28 @@ class GraphBuilder:
 
 
 
+
+
     def ingest_data(self, state: AgentState):
        
         return Ingest_clean_data(state)
 
+
+
     def clean_and_validate_data(self, state: AgentState):
         return clean_and_validate_data(state)
+
+
 
     def validate_data(self, state: AgentState):
         return validate_data(state)
 
+
+
     def save_results(self, state: AgentState):
         return self.saver.save_results(state)
+
+
 
     def build_graph(self):
         workflow = StateGraph(AgentState)
@@ -66,21 +81,38 @@ class GraphBuilder:
         workflow.add_node("clean_and_validate_data", self.clean_and_validate_data)
         workflow.add_node("validate_data", self.validate_data)
         workflow.add_node("save_results", self.save_results)
+        workflow.add_node("escalate_or_request_input", self.escalate_or_request_input)
         workflow.set_entry_point("ingest_data")
         workflow.add_edge("ingest_data", "clean_and_validate_data")
         workflow.add_edge("clean_and_validate_data", "validate_data")
+
+        # Add a counter to state to track validation attempts
+        def validation_decision(state):
+            if state.get("is_valid"):
+                return "is_valid"
+            # Track number of validation attempts
+            attempts = state.get("validation_attempts", 0) + 1
+            state["validation_attempts"] = attempts
+            if attempts >= 2:
+                return "escalate"
+            return "needs_reprocessing"
+
         workflow.add_conditional_edges(
             "validate_data",
-            lambda state: "is_valid" if state.get("is_valid") else "needs_reprocessing",
+            validation_decision,
             {
                 "is_valid": "save_results",
-                "needs_reprocessing": "clean_and_validate_data"
+                "needs_reprocessing": "clean_and_validate_data",
+                "escalate": "escalate_or_request_input"
             }
         )
         workflow.add_edge("save_results", END)
+        workflow.add_edge("escalate_or_request_input", END)
         self.app = workflow.compile()
         return self.app
     
+
+
 
 
 
