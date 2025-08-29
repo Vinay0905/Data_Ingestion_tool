@@ -10,3 +10,5 @@ wheels/
 .venv
 data_ingestion_env
 .env
+utilits/client_secrets.json
+utilits/credentials.json
