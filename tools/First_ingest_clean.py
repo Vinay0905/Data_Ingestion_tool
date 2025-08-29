@@ -2,13 +2,13 @@
 Data ingestion and cleaning functions.
 """
 import pandas as pd
+import os
 from tools.Typedict_state import AgentState
 
 
 
 # Place ingest_and_clean_data and ingest_data functions here.
 
-import os
 
 class Ingest_clean_data:
     @staticmethod
