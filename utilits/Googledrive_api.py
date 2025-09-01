@@ -4,6 +4,7 @@ import os
 
 # Use persistent credentials so authentication is only required the first time
 gauth = GoogleAuth()
+gauth.settings['get_refresh_token']=True
 gauth.LoadClientConfigFile("utilits/client_secrets.json")
 gauth.LoadCredentialsFile("utilits/credentials.json")
 if gauth.credentials is None:
